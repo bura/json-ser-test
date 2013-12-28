@@ -1,0 +1,40 @@
+apply plugin: 'shadow'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+buildDir = 'target'
+test.systemProperty('java.awt.headless', 'true')
+
+version = '1.0'
+
+buildscript {
+    repositories {
+        maven {
+            name 'Gradle Shadow'
+            url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
+        }
+    }
+    dependencies {
+        classpath 'org.gradle.plugins:shadow:0.7.4'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.openjdk.jmh:jmh-core:0.2'
+    compile 'org.codehaus.groovy:groovy-all:2.2.1'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.0'
+}
+
+shadow {
+    transformer(org.gradle.api.plugins.shadow.transformers.ManifestResourceTransformer) {
+        mainClass = 'org.openjdk.jmh.Main'
+    }
+    outputFile = new File("${buildDir}/libs/microbenchmarks.jar")
+}
